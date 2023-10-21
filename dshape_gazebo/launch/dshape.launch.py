@@ -53,14 +53,24 @@ def generate_launch_description():
         }.items(),
     )
 
+    # spawn_robot_node = Node(
+    #     package='gazebo_ros',
+    #     executable='spawn_entity.py',
+    #     # arguments=['-database', 'dshape', '-entity', 'dshape',
+    #     arguments=['-file', urdf_file, '-entity', 'dshape',
+    #                "-x", '0.0',
+    #                "-y", '0.0',
+    #                "-z", '0.3'],
+    #     output='screen'
+    # ) 
+    # arguments=['-entity', 'dshape', '-topic', '/robot_description',
     spawn_robot_node = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
-        # arguments=['-database', 'dshape_tall_ros', '-entity', 'dshape_tall_ros',
-        arguments=['-file', urdf_file, '-entity', 'dshape',
-                   "-x", '0.0',
-                   "-y", '0.0',
-                   "-z", '0.3'],
+        arguments=['-entity', 'dshape', '-file', urdf_file,
+        "-x", '0.0',
+        "-y", '0.0',
+        "-z", '0.3'],
         output='screen'
     )
     

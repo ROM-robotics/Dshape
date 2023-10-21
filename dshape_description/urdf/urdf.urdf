@@ -19,7 +19,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="dshape_description/meshes/base_link.STL"/>
+        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0 0 0 1"/>
@@ -28,7 +28,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="dshape_description/meshes/base_link.STL"/>
+        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/base_link.STL"/>
       </geometry>
     </collision>
   </link>
@@ -41,7 +41,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="dshape_description/meshes/right_wheel.STL"/>
+        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/right_wheel.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.29804 0.29804 0.29804 1"/>
@@ -50,8 +50,19 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="dshape_description/meshes/right_wheel.STL"/>
+        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/right_wheel.STL"/>
       </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1</mu>
+            <mu2>1</mu2>
+            <fdir1>0 0 0</fdir1>
+            <slip1>0</slip1>
+            <slip2>0</slip2>
+          </ode>
+        </friction>
+      </surface>
     </collision>
   </link>
   <joint name="right_wheel_joint" type="continuous">
@@ -69,7 +80,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="dshape_description/meshes/left_wheel.STL"/>
+        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/left_wheel.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.29804 0.29804 0.29804 1"/>
@@ -78,8 +89,19 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="dshape_description/meshes/left_wheel.STL"/>
+        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/left_wheel.STL"/>
       </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1</mu>
+            <mu2>1</mu2>
+            <fdir1>0 0 0</fdir1>
+            <slip1>0</slip1>
+            <slip2>0</slip2>
+          </ode>
+        </friction>
+      </surface>
     </collision>
   </link>
   <joint name="left_wheel_joint" type="continuous">
@@ -93,13 +115,13 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar"/>
-    <origin rpy="0 0 0" xyz="0 0 0.2"/>
+    <origin rpy="0 0 0" xyz="0 0 0.02"/>
   </joint>
   <link name="camera"/>
   <joint name="camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="camera"/>
-    <origin rpy="0 0 0" xyz="0 0 0.3"/>
+    <origin rpy="0 0 0" xyz="0 0 0.03"/>
   </joint>
   <!-- Colour -->
   <gazebo reference="base_link">
@@ -107,9 +129,13 @@
   </gazebo>
   <gazebo reference="right_wheel">
     <material>Gazebo/Yellow</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
   </gazebo>
   <gazebo reference="left_wheel">
     <material>Gazebo/Yellow</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
   </gazebo>
   <gazebo reference="lidar">
     <material>Gazebo/White</material>
