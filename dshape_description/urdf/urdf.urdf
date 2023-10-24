@@ -19,7 +19,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/base_link.STL"/>
+        <mesh filename="package://dshape_description/meshes/base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0 0 0 1"/>
@@ -28,7 +28,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/base_link.STL"/>
+        <mesh filename="package://dshape_description/meshes/base_link.STL"/>
       </geometry>
     </collision>
   </link>
@@ -41,7 +41,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/right_wheel.STL"/>
+        <mesh filename="package://dshape_description/meshes/right_wheel.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.29804 0.29804 0.29804 1"/>
@@ -50,7 +50,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/right_wheel.STL"/>
+        <mesh filename="package://dshape_description/meshes/right_wheel.STL"/>
       </geometry>
       <surface>
         <friction>
@@ -80,7 +80,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/left_wheel.STL"/>
+        <mesh filename="package://dshape_description/meshes/left_wheel.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.29804 0.29804 0.29804 1"/>
@@ -89,7 +89,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/mr_robot/ros2/developer_ws/src/dshape/dshape_description/meshes/left_wheel.STL"/>
+        <mesh filename="package://dshape_description/meshes/left_wheel.STL"/>
       </geometry>
       <surface>
         <friction>
@@ -140,97 +140,33 @@
   <gazebo reference="lidar">
     <material>Gazebo/White</material>
   </gazebo>
-  <gazebo reference="lidar">
-    <material>Gazebo/Red</material>
-    <sensor name="laser" type="ray">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
-      <update_rate>10</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>360</samples>
-            <resolution>1</resolution>
-            <min_angle>-3.14</min_angle>
-            <max_angle>3.14</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.3</min>
-          <max>12</max>
-          <resolution>0.01</resolution>
-        </range>
-      </ray>
-      <plugin filename="libgazebo_ros_ray_sensor.so" name="laser_controller">
-        <ros>
-          <argument>~/out:=scan</argument>
-        </ros>
-        <output_type>sensor_msgs/LaserScan</output_type>
-        <frame_name>lidar</frame_name>
-      </plugin>
-    </sensor>
-  </gazebo>
-  <ros2_control name="GazeboSystem" type="system">
+  <ros2_control name="DiffBot" type="system">
     <hardware>
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      <plugin>diffdrive_stm32/DiffDriveStm32Hardware</plugin>
+      <param name="left_wheel_name">left_wheel_joint</param>
+      <param name="right_wheel_name">right_wheel_joint</param>
+      <param name="loop_rate">50</param>
+      <param name="device">/dev/ttyUSB0</param>
+      <!--fixed-->
+      <param name="baud_rate">115200</param>
+      <param name="timeout_ms">1000</param>
+      <param name="enc_counts_per_rev">1320</param>
     </hardware>
     <joint name="left_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-10</param>
-        <param name="max">10</param>
+        <param name="min">-50</param>
+        <param name="max">50</param>
       </command_interface>
       <state_interface name="velocity"/>
       <state_interface name="position"/>
     </joint>
     <joint name="right_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-10</param>
-        <param name="max">10</param>
+        <param name="min">-50</param>
+        <param name="max">50</param>
       </command_interface>
       <state_interface name="velocity"/>
       <state_interface name="position"/>
     </joint>
   </ros2_control>
-  <gazebo>
-    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-      <robot_param>robot_description</robot_param>
-      <robot_param_node>robot_state_publisher</robot_param_node>
-      <parameters>/home/mr_robot/ros2/developer_ws/install/dshape_description/share/dshape_description/config/my_controllers.yaml</parameters>
-      <!-- Output -->
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>true</publish_wheel_tf>
-    </plugin>
-  </gazebo>
-  <joint name="camera_optical_joint" type="fixed">
-    <parent link="camera"/>
-    <child link="camera_link_optical"/>
-    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
-  </joint>
-  <link name="camera_link_optical"/>
-  <gazebo reference="camera">
-    <material>Gazebo/Blue</material>
-    <sensor name="camera" type="camera">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
-      <update_rate>10</update_rate>
-      <camera>
-        <horizontal_fov>1.089</horizontal_fov>
-        <image>
-          <format>R8G8B8</format>
-          <width>640</width>
-          <height>480</height>
-        </image>
-        <clip>
-          <near>0.05</near>
-          <far>8.0</far>
-        </clip>
-      </camera>
-      <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
-        <frame_name>camera_link_optical</frame_name>
-      </plugin>
-    </sensor>
-  </gazebo>
 </robot>
