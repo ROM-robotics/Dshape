@@ -1,4 +1,3 @@
-
 from launch import LaunchDescription
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessExit
@@ -15,7 +14,7 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("dshape_description"), "urdf", "robot.urdf.xacro"]
+                [FindPackageShare("stm32f1_system_interface"), "urdf", "diffbot.urdf.xacro"]
             ),
         ]
     )
@@ -23,9 +22,9 @@ def generate_launch_description():
 
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("dshape_description"),
+            FindPackageShare("rom2109_controller"),
             "config",
-            "hw_controllers.yaml",
+            "diffbot_controllers.yaml",
         ]
     )
     rviz_config_file = PathJoinSubstitution(
@@ -43,6 +42,9 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[robot_description],
+        remappings=[
+            ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
+        ],
     )
     rviz_node = Node(
         package="rviz2",
@@ -55,13 +57,13 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_broadcaster", "--controller-manager", "/controller_manager"],
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["base_controller", "--controller-manager", "/controller_manager"],
+        arguments=["diffbot_base_controller", "--controller-manager", "/controller_manager"],
     )
 
     # Delay rviz start after `joint_state_broadcaster`
@@ -84,7 +86,7 @@ def generate_launch_description():
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
-        #delay_rviz_after_joint_state_broadcaster_spawner,
+        delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
     ]
 
